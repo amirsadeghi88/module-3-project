@@ -2,7 +2,7 @@ const router = require("express").Router();
 const UserModel = require("../models/User.model");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { isAthenticated } = require("../middlewares/jwt.middleware");
+const { isAuthenticated } = require("../middlewares/jwt.middleware");
 //route to create a new user with encrypted password
 
 router.post("/signup", async (req, res) => {
@@ -48,8 +48,6 @@ router.post("/login", async (req, res) => {
         res.status(200).json({ message: "You're logged in", authToken });
       }
     }
-
-    res.status(200).json(foundUser);
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
@@ -58,7 +56,7 @@ router.post("/login", async (req, res) => {
 
 // verify route to check if the token is valid
 
-router.get("/verify", isAthenticated, (req, res) => {
+router.get("/verify", isAuthenticated, (req, res) => {
   if (req.payload) {
     res.status(200).json({ message: "Token valid", payload: req.payload });
   } else {
