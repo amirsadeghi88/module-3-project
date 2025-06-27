@@ -2,30 +2,37 @@ const { isAuthenticated } = require("../middlewares/jwt.middleware");
 const PetModel = require("../models/Pet.model");
 const UserModel = require("../models/User.model");
 const router = require("express").Router();
+const uploader = require("../middlewares/cloudinary.config");
 
 //route to create a pet and then add that pet to an array inside the user
-router.post("/add-pet", isAuthenticated, async (req, res) => {
-  const theOwnerId = req.payload._id;
-  try {
-    const createdPet = await PetModel.create({
-      ...req.body,
-      owner: theOwnerId,
-    });
-    const updatedUser = await UserModel.findByIdAndUpdate(
-      theOwnerId,
-      {
-        $push: { pets: createdPet._id },
-      },
-      { new: true }
-    );
-    console.log("pet created", createdPet);
-    console.log("user updated", updatedUser);
-    res.status(201).json({ createdPet, updatedUser });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json(error);
+router.post(
+  "/add-pet",
+  isAuthenticated,
+  uploader.single("imageUrl"),
+  async (req, res) => {
+    const theOwnerId = req.payload._id;
+    try {
+      const createdPet = await PetModel.create({
+        ...req.body,
+        owner: theOwnerId,
+        image: req.file?.path,
+      });
+      const updatedUser = await UserModel.findByIdAndUpdate(
+        theOwnerId,
+        {
+          $push: { pets: createdPet._id },
+        },
+        { new: true }
+      );
+      console.log("pet created", createdPet);
+      console.log("user updated", updatedUser);
+      res.status(201).json({ createdPet, updatedUser });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json(error);
+    }
   }
-});
+);
 
 //route to get one pet for one specific user
 router.get("/user-pets", isAuthenticated, async (req, res) => {

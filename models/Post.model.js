@@ -13,10 +13,10 @@ const postSchema = new Schema({
   owner: {
     type: Schema.Types.ObjectId,
     ref: "User",
-    required: true,
   },
   dates: {
     type: String,
+    
   },
   description: {
     type: String,
