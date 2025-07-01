@@ -23,6 +23,10 @@ const userSchema = new Schema(
       type: [Schema.Types.ObjectId],
       ref: "pet",
     },
+    acceptedPets: {
+      type: [Schema.Types.ObjectId],
+      ref: "Post",
+    },
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`

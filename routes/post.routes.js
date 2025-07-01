@@ -1,10 +1,14 @@
 const router = require("express").Router();
 const { Router } = require("express");
 const PostModel = require("../models/Post.model");
+const uploader = require("../middlewares/cloudinary.config");
 
-router.post("/add-post", async (req, res) => {
-  const createdPost = await PostModel.create(req.body);
+router.post("/add-post", uploader.single("imageUrl"), async (req, res) => {
   try {
+    const createdPost = await PostModel.create({
+      ...req.body,
+      image: req.file?.path,
+    });
     res.status(201).json(createdPost);
   } catch (error) {
     console.log(error);
