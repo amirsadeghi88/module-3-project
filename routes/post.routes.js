@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const { Router } = require("express");
 const PostModel = require("../models/Post.model");
-const uploader = require("../middlewares/cloudinary.config");
+const uploader = require("../middlewares/Cloudinary.config");
 
 router.post("/add-post", uploader.single("imageUrl"), async (req, res) => {
   try {

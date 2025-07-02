@@ -2,7 +2,7 @@ const { isAuthenticated } = require("../middlewares/jwt.middleware");
 const PetModel = require("../models/Pet.model");
 const UserModel = require("../models/User.model");
 const router = require("express").Router();
-const uploader = require("../middlewares/cloudinary.config");
+const uploader = require("../middlewares/Cloudinary.config");
 
 //route to create a pet and then add that pet to an array inside the user
 router.post(
